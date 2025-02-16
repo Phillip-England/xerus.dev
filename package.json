@@ -1,0 +1,22 @@
+{
+  "name": "xerus.dev",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.0.9"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/react-dom": "^19.0.3",
+    "highlight.js": "^11.11.1",
+    "jsdom": "^26.0.0",
+    "marked": "^15.0.7",
+    "react-dom": "^19.0.0",
+    "server": "react-dom/server",
+    "xerus": "github:phillip-england/xerus"
+  }
+}

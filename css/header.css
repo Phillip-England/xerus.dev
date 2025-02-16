@@ -1,0 +1,29 @@
+header {
+  background-color: black;
+  color: white; 
+  padding: 1em;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  gap: 2em;
+  border-bottom:solid #222 2px;
+}
+
+header .header-text {
+  width: max-content;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
