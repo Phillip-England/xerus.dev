@@ -77,6 +77,10 @@ app.get("/", async (c: HTTPContext) => {
   return c.html(root("Xerus - Simple web apps for Bun", mdContent));
 });
 
+app.get('/favicon.ico', async (c: HTTPContext) => {
+  return await c.file('./favicon.ico')
+})
+
 app.get("/static/*", async (c: HTTPContext) => {
   return await c.file("." + c.path);
 });

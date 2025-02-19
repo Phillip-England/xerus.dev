@@ -1,0 +1,10 @@
+{
+  "host": "http://localhost:8080",
+  "static": "./static",
+  "favicon": "./favicon.ico",
+  "out": "./www",
+  "target": "https://phillip-england.github.io/xerus.dev",
+  "routes": [
+      "/"
+  ]
+}

@@ -7,6 +7,7 @@ export const root = (title: string, content: string) => {
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel='stylesheet' href='/static/css/index.css'/>
+      <link rel="icon" type="image/x-icon" href="favicon.ico">
       <title>${title}</title>
     </head>
     <body class='content-grid'>

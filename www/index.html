@@ -1,0 +1,171 @@
+<html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://phillip-england.github.io/xerus.dev/static/css/index.css><link rel=icon type=image/x-icon href=favicon.ico><title>Xerus - Simple web apps for Bun</title><body class=content-grid><header><a class=logo><img src=https://phillip-england.github.io/xerus.dev/static/img/logo-dark.svg width=50></a><div class=icon-wrapper><svg class="bars" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"></path>
+        </svg></div></header><nav><ul class=scroll-hidden><li><a href=#xerus>Xerus</a><li><a href=#installation>Installation</a><li><a href=#hello-world>Hello, World</a><li><a href=#httphandlerfunc>HTTP Handler Func</a><li><a href=#routing>Routing</a><li><a href=#static-files>Static Files</a><li><a href=#middleware>Middleware</a><li><a href=#httpcontext>HTTPContext</a><li><a href=#redirect-the-request>Redirect The Request</a><li><a href=#parse-the-request-body>Parse The Request Body</a><li><a href=#get-dynamic-path-param>Get Dynamic Path Param</a><li><a href=#set-status-code>Set Status Code</a><li><a href=#set-response-headers>Set Response Headers</a><li><a href=#get-request-header>Get Request Header</a><li><a href=#respond-with-html-json-or-text>Respond with HTML, JSON, or TEXT</a><li><a href=#stream-a-response>Stream A Response</a><li><a href=#response-with-a-file>Response With A File</a><li><a href=#stream-a-file>Stream A File</a><li><a href=#set-get-and-clear-cookies>Set, Get, And Clear Cookies</a><li><a href=#custom-404>Custom 404</a><li><a href=#custom-error-handling>Custom Error Handling</a><li><a href=#web-sockets>Web Sockets</a></ul></nav><main class=scroll-hidden><article><h1 id=xerus>Xerus</h1><p>Simple web apps for Bun.</p><a href=https://github.com/phillip-england/xerus style="width:64px; height:64px;"><svg style="width:64px; height:64px;" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <path fill-rule="evenodd" d="M12.006 2a9.847 9.847 0 0 0-6.484 2.44 10.32 10.32 0 0 0-3.393 6.17 10.48 10.48 0 0 0 1.317 6.955 10.045 10.045 0 0 0 5.4 4.418c.504.095.683-.223.683-.494 0-.245-.01-1.052-.014-1.908-2.78.62-3.366-1.21-3.366-1.21a2.711 2.711 0 0 0-1.11-1.5c-.907-.637.07-.621.07-.621.317.044.62.163.885.346.266.183.487.426.647.71.135.253.318.476.538.655a2.079 2.079 0 0 0 2.37.196c.045-.52.27-1.006.635-1.37-2.219-.259-4.554-1.138-4.554-5.07a4.022 4.022 0 0 1 1.031-2.75 3.77 3.77 0 0 1 .096-2.713s.839-.275 2.749 1.05a9.26 9.26 0 0 1 5.004 0c1.906-1.325 2.74-1.05 2.74-1.05.37.858.406 1.828.101 2.713a4.017 4.017 0 0 1 1.029 2.75c0 3.939-2.339 4.805-4.564 5.058a2.471 2.471 0 0 1 .679 1.897c0 1.372-.012 2.477-.012 2.814 0 .272.18.592.687.492a10.05 10.05 0 0 0 5.388-4.421 10.473 10.473 0 0 0 1.313-6.948 10.32 10.32 0 0 0-3.39-6.165A9.847 9.847 0 0 0 12.007 2Z" clip-rule="evenodd"></path>
+  </svg></a><h2 id=installation>Installation</h2><div class=code><pre><code class="language-bash hljs">bun add github:phillip-england/xerus
+</code></pre></div><h2 id=hello-world>Hello, World</h2><p>Create an <code>index.ts</code> and paste in the following code:<div class=code><pre><code class="language-ts hljs"><span class=hljs-keyword>import</span> { <span class="hljs-title class_">HTTPContext</span>, logger, <span class="hljs-title class_">Xerus</span> } <span class=hljs-keyword>from</span> <span class=hljs-string>&#34;xerus/xerus&#34;</span>;
+
+<span class=hljs-keyword>let</span> app = <span class=hljs-keyword>new</span> <span class="hljs-title class_">Xerus</span>()
+
+app.<span class="hljs-title function_">use</span>(logger)
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules!&lt;/h1&gt;`</span>)
+})
+
+<span class=hljs-keyword>await</span> app.<span class="hljs-title function_">listen</span>()
+</code></pre></div><p>Run the application using:<div class=code><pre><code class="language-bash hljs">bun run --hot index.ts
+</code></pre></div><p>Visit <code>localhost:8080</code><h2 id=httphandlerfunc>HTTPHandlerFunc</h2><p>An <code>HTTPHandlerFunc</code> takes in an <code>HTTPContext</code> and returns <code>Promise&lt;Response></code>:<div class=code><pre><code class="language-ts hljs"><span class=hljs-keyword>let</span> <span class="hljs-title function_">handler</span> = <span class=hljs-keyword>async</span> (<span class=hljs-params><span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span></span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules&lt;/h1&gt;`</span>)
+}
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, handler)
+</code></pre></div><h2 id=routing>Routing</h2><p><code>Xerus</code> supports static, dynamic, and wildcard paths:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, handler)
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, handler)
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/static/*&#39;</span>, handler)
+</code></pre></div><p>Group routing is also supported:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">group</span>(<span class=hljs-string>&#39;/api&#39;</span>)
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, handler)
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/post/:postNumber&#39;</span>, handler)
+</code></pre></div><h2 id=static-files>Static Files</h2><p>Use a wildcard to serve static files from <code>./static</code>:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#34;/static/*&#34;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">Context</span>) =&gt; {
+  <span class=hljs-keyword>return</span> <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">file</span>(<span class=hljs-string>&#34;.&#34;</span> + c.<span class=hljs-property>path</span>);
+});
+</code></pre></div><h2 id=middleware>Middleware</h2><p>Middleware executes in the following order:<ol><li>Global<li>Group<li>Route</ol><p>Create a new <code>Middleware</code>:<div class=code><pre><code class="language-ts hljs"><span class=hljs-keyword>let</span> mw = <span class=hljs-keyword>new</span> <span class="hljs-title class_">Middleware</span>(
+  <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>, <span class=hljs-attr>next</span>: <span class="hljs-title class_">MiddlewareNextFn</span>): <span class="hljs-title class_">Promise</span>&lt;<span class=hljs-built_in>void</span> | <span class="hljs-title class_">Response</span>&gt; =&gt; {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class=hljs-string>&#39;logic before handler&#39;</span>);
+    <span class="hljs-title function_">next</span>();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class=hljs-string>&#34;logic after handler&#34;</span>);
+  },
+);
+</code></pre></div><p>Link it globally:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">use</span>(mw)
+</code></pre></div><p>Or to a group:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">group</span>(<span class=hljs-string>&#39;/api&#39;</span>, mw) <span class=hljs-comment>// &lt;=====</span>
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, handler)
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/post/:postNumber&#39;</span>, handler)
+</code></pre></div><p>Or to a route:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, handler, mw) <span class=hljs-comment>// &lt;=====</span>
+</code></pre></div><p>Chain as many as you'd like to all three types:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">use</span>(mw, mw, mw)
+
+app.<span class="hljs-title function_">group</span>(<span class=hljs-string>&#39;/api&#39;</span>, mw, mw, mw)
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, handler)
+  .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/post/:postNumber&#39;</span>, handler)
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, handler, mw, mw, mw)
+</code></pre></div><h2 id=httpcontext>HTTPContext</h2><p><code>HTTPContext</code> allows us to work with the incoming requests and prepare responses. Here are the features it provides.<h3 id=redirect-the-request>Redirect The Request</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules&lt;/h1&gt;`</span>)
+})
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/redirect&#39;</span>, <span class="hljs-title function_">async</span>(<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">redirect</span>(<span class=hljs-string>&#39;/&#39;</span>)
+})
+</code></pre></div><h3 id=parse-the-request-body>Parse The Request Body</h3><p>Use the <code>BodyType</code> enum to enforce a specific type of data in the request body:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/body/text&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> data = <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">parseBody</span>(<span class="hljs-title class_">BodyType</span>.<span class=hljs-property>TEXT</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">json</span>({<span class=hljs-attr>data</span>: data})
+})
+
+app.<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/body/json&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> data = <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">parseBody</span>(<span class="hljs-title class_">BodyType</span>.<span class=hljs-property>JSON</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">json</span>({<span class=hljs-attr>data</span>: data})
+})
+
+app.<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/body/multipart&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> data = <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">parseBody</span>(<span class="hljs-title class_">BodyType</span>.<span class=hljs-property>MULTIPART_FORM</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">json</span>({<span class=hljs-attr>data</span>: data})
+})
+
+app.<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/body/form&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> data = <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">parseBody</span>(<span class="hljs-title class_">BodyType</span>.<span class=hljs-property>FORM</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">json</span>({<span class=hljs-attr>data</span>: data})
+})
+</code></pre></div><h3 id=get-dynamic-path-param>Get Dynamic Path Param</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> id = c.<span class="hljs-title function_">getParam</span>(<span class=hljs-string>&#39;id&#39;</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules Times <span class=hljs-subst>${id}</span>!&lt;/h1&gt;`</span>)
+})
+</code></pre></div><h3 id=set-status-code>Set Status Code</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">setStatus</span>(<span class=hljs-number>404</span>).<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Not Found&lt;/h1&gt;`</span>)
+})
+</code></pre></div><h3 id=set-response-headers>Set Response Headers</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  c.<span class="hljs-title function_">setHeader</span>(<span class=hljs-string>&#39;X-Who-Rules&#39;</span>, <span class=hljs-string>`O&#39;Doyle Rules`</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules!&lt;/h1&gt;`</span>)
+})
+</code></pre></div><h3 id=get-request-header>Get Request Header</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> headerVal = c.<span class="hljs-title function_">getHeader</span>(<span class=hljs-string>&#39;X-Who-Rules&#39;</span>)
+  <span class=hljs-keyword>if</span> (headerVal) {
+    <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;<span class=hljs-subst>${headerVal}</span>&lt;/h1&gt;`</span>)
+  }
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;Header missing&lt;/h1&gt;`</span>)
+})
+</code></pre></div><h3 id=respond-with-html-json-or-text>Respond with HTML, JSON, or TEXT</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/html&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">html</span>(<span class=hljs-string>`&lt;h1&gt;O&#39;Doyle Rules!&lt;/h1&gt;`</span>)
+})
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/json&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">json</span>({<span class=hljs-attr>message</span>: <span class=hljs-string>`O&#39;Doyle Rules!`</span>})
+})
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/text&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">text</span>(<span class=hljs-string>`O&#39;Doyle Rules!`</span>)
+})
+</code></pre></div><h3 id=stream-a-response>Stream A Response</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>const</span> stream = <span class=hljs-keyword>new</span> <span class="hljs-title class_">ReadableStream</span>({
+    <span class="hljs-title function_">start</span>(<span class=hljs-params>controller</span>) {
+      <span class=hljs-keyword>const</span> encoder = <span class=hljs-keyword>new</span> <span class="hljs-title class_">TextEncoder</span>();
+      <span class=hljs-keyword>let</span> count = <span class=hljs-number>0</span>;
+      <span class=hljs-keyword>const</span> interval = <span class=hljs-built_in>setInterval</span>(<span class=hljs-function>() =&gt;</span> {
+        controller.<span class="hljs-title function_">enqueue</span>(encoder.<span class="hljs-title function_">encode</span>(<span class=hljs-string>`O&#39;Doyle Rules! <span class=hljs-subst>${count}</span>\n`</span>));
+        count++;
+        <span class=hljs-keyword>if</span> (count &gt;= <span class=hljs-number>3</span>) {
+          <span class=hljs-built_in>clearInterval</span>(interval);
+          controller.<span class="hljs-title function_">close</span>();
+        }
+      }, <span class=hljs-number>1000</span>);
+    }
+  });
+  c.<span class="hljs-title function_">setHeader</span>(<span class=hljs-string>&#34;Content-Type&#34;</span>, <span class=hljs-string>&#34;text/plain&#34;</span>);
+  c.<span class="hljs-title function_">setHeader</span>(<span class=hljs-string>&#34;Content-Disposition&#34;</span>, <span class=hljs-string>&#39;attachment; filename=&#34;odoyle_rules.txt&#34;&#39;</span>);
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">stream</span>(stream);
+});
+</code></pre></div><h3 id=response-with-a-file>Response With A File</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">file</span>(<span class=hljs-string>&#34;./path/to/file&#34;</span>);
+});
+</code></pre></div><h3 id=stream-a-file>Stream A File</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">file</span>(<span class=hljs-string>&#34;./path/to/file&#34;</span>, <span class=hljs-literal>true</span>);
+});
+</code></pre></div><h3 id=set-get-and-clear-cookies>Set, Get, And Clear Cookies</h3><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/set&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  c.<span class="hljs-title function_">setCookie</span>(<span class=hljs-string>&#39;secret&#39;</span>, <span class=hljs-string>&#34;O&#39;Doyle_Rules!&#34;</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">redirect</span>(<span class=hljs-string>&#39;/get&#39;</span>)
+});
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/get&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  <span class=hljs-keyword>let</span> cookie = c.<span class="hljs-title function_">getCookie</span>(<span class=hljs-string>&#39;secret&#39;</span>)
+  <span class=hljs-keyword>if</span> (cookie) {
+    <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">text</span>(<span class=hljs-string>`visit /clear to clear the cookie with the value: <span class=hljs-subst>${cookie}</span>`</span>)
+  }
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">text</span>(<span class=hljs-string>&#39;visit /set to set the cookie&#39;</span>)
+})
+
+app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/clear&#39;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
+  c.<span class="hljs-title function_">clearCookie</span>(<span class=hljs-string>&#39;secret&#39;</span>)
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">redirect</span>(<span class=hljs-string>&#39;/get&#39;</span>)
+})
+</code></pre></div><h2 id=custom-404>Custom 404</h2><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">onNotFound</span>(<span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Response</span>&gt; =&gt; {
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">setStatus</span>(<span class=hljs-number>404</span>).<span class="hljs-title function_">text</span>(<span class=hljs-string>&#34;404 Not Found&#34;</span>);
+});
+</code></pre></div><h2 id=custom-error-handling>Custom Error Handling</h2><div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">onErr</span>(<span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-title class_">Response</span>&gt; =&gt; {
+  <span class=hljs-keyword>let</span> err = c.<span class="hljs-title function_">getErr</span>();
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(err);
+  <span class=hljs-keyword>return</span> c.<span class="hljs-title function_">setStatus</span>(<span class=hljs-number>500</span>).<span class="hljs-title function_">text</span>(<span class=hljs-string>&#34;internal server error&#34;</span>);
+});
+</code></pre></div><h2 id=web-sockets>Web Sockets</h2><p>Setup a new websocket route, using <code>onConnect</code> for pre-connect authorization:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">ws</span>(<span class=hljs-string>&#34;/chat&#34;</span>, {
+  <span class=hljs-keyword>async</span> <span class="hljs-title function_">open</span>(<span class=hljs-params>ws</span>) {
+    <span class=hljs-keyword>let</span> c = ws.<span class=hljs-property>data</span> <span class=hljs-comment>// get the context</span>
+    
+  },
+  <span class=hljs-keyword>async</span> <span class="hljs-title function_">message</span>(<span class=hljs-params>ws, message</span>) {
+
+  },
+  <span class=hljs-keyword>async</span> <span class="hljs-title function_">close</span>(<span class=hljs-params>ws, code, message</span>) {
+
+  },
+  <span class=hljs-keyword>async</span> <span class="hljs-title function_">onConnect</span>(<span class=hljs-params><span class=hljs-attr>c</span>: <span class="hljs-title class_">WSContext</span></span>) {
+    c.<span class="hljs-title function_">set</span>(<span class=hljs-string>&#39;secret&#39;</span>, <span class=hljs-string>&#34;O&#39;Doyle&#34;</span>) <span class=hljs-comment>// set pre-connect data</span>
+  }
+});
+</code></pre></div></article></main><script src=https://phillip-england.github.io/xerus.dev/static/js/index.js></script>
