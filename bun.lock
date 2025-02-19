@@ -171,7 +171,7 @@
 
     "ws": ["ws@8.18.0", "", { "peerDependencies": { "bufferutil": "^4.0.1", "utf-8-validate": ">=5.0.2" }, "optionalPeers": ["bufferutil", "utf-8-validate"] }, "sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw=="],
 
-    "xerus": ["xerus@github:phillip-england/xerus#aa7cb68", { "peerDependencies": { "typescript": "^5.0.0" } }, "Phillip-England-xerus-aa7cb68"],
+    "xerus": ["xerus@github:phillip-england/xerus#814d140", { "peerDependencies": { "typescript": "^5.0.0" } }, "Phillip-England-xerus-814d140"],
 
     "xml-name-validator": ["xml-name-validator@5.0.0", "", {}, "sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg=="],
 

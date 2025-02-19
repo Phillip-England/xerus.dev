@@ -1,6 +1,6 @@
 
-css:
-	bun build ./css/index.css --outdir ./static/css --minify --watch
+run:
+	bun --hot run index.ts
 
-js:
+bundle-js:
 	bun build ./client/index.ts --outdir ./static/js --minify --watch
