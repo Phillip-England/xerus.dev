@@ -3,7 +3,7 @@
   "static": "./static",
   "favicon": "./favicon.ico",
   "out": "./docs",
-  "target": "https://phillip-england.github.io/xerus.dev",
+  "target": "https://xerus.dev",
   "routes": [
       "/"
   ]
