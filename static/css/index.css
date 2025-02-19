@@ -14,27 +14,63 @@ body, html {
   line-height: 1.5;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ========================= */
+/* anchor tags */
+/* ========================== */
+
+a {
+  color: white;  /* Default link color */
+  text-decoration: none; /* Remove underline if desired */
+}
+
+a:visited {
+  color: white; /* Ensure visited links don't turn purple */
+}
+
+a:hover {
+  color: #ccc; /* Optional: Change color on hover */
+}
+
+a:active {
+  color: white; /* Ensures no color change on click */
+}
+
+/* ========================= */
+/* animations */
+/* ========================== */
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.2s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* ========================= */
+/* utility classes */
+/* ========================== */
+
+.hidden {
+  display: none !important;
+}
+
 /* ========================= */
 /* body scroll bar */
 /* ========================== */
-
-.scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-
-.scrollbar::-webkit-scrollbar-track {
-  background: black;
-  border-radius: 5px;
-}
-
-.scrollbar::-webkit-scrollbar::-webkit-scrollbar-thumb {
-  background: black;
-  border-radius: 5px;
-}
-
-.scrollbar::-webkit-scrollbar-thumb:hover {
-  background: black;
-}
 
 .scroll-hidden {
   overflow: auto;
@@ -56,6 +92,65 @@ body {
   grid-template-columns: 100vw;
 }
 
+body.content-grid {
+  grid-template-areas: 
+  "header"
+  "main"
+;
+}
+
+body.nav-grid {
+  grid-template-areas: 
+  "header"
+  "nav"
+;
+}
+
+@media (min-width: 900px) {
+  body {
+    grid-template-columns: 1fr 3fr;
+  }
+
+  body.content-grid {
+    grid-template-areas: 
+      "header header"
+      "nav main";
+  }
+
+}
+
+@media (min-width: 1200px) {
+  body {
+    grid-template-columns: 350px 3fr;
+  }
+}
+
+/* ========================= */
+/* navbar */
+/* ========================== */
+
+nav {
+  display: none;
+  grid-area: nav;
+  background-color: black;
+  padding: 1em;
+  overflow:hidden;
+}
+
+@media (min-width: 900px) {
+  nav {
+    display:flex;
+  }
+}
+
+
+nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  overflow-y: scroll;
+}
+
 /* ========================= */
 /* header */
 /* ========================== */
@@ -66,8 +161,28 @@ header {
   top:0;
   background-color: black;
   padding:1rem;
+  display: flex;
+  justify-content: space-between;
+  grid-area: header;
 }
 
+@media (min-width: 900px) {
+  header .icon-wrapper .bars {
+    display:none;
+  }
+  
+}
+
+
+header .icon-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+header .bars {
+  height: 2rem;
+  width: 2rem;
+}
 
 /* ========================= */
 /* main content */
@@ -78,6 +193,19 @@ main {
   overflow-y: auto;
   overflow-x:hidden;
   position: relative;
+  grid-area: main;
+  display: block;
+}
+
+@media (min-width: 1200px) {
+  main {
+    display: flex;
+    justify-content: start;
+  }
+
+  article {
+    max-width: 700px;
+  }
 }
 
 main h1 {
@@ -92,6 +220,12 @@ main h2 {
 
 main h3 {
   font-size: 1.5rem;
+}
+
+main p code {
+  border:solid #222 1px;
+  padding:0.2em;
+  border-radius: 2px;
 }
 
 main .code {

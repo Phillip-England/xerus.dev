@@ -12,16 +12,39 @@ async function md(filePath: string) {
       const dom = new JSDOM(`<body>${htmlContent}</body>`);
       const document = dom.window.document;
 
-      document.querySelectorAll('pre').forEach((pre: any) => {
+      const generateId = (text: string) => 
+          text.toLowerCase()
+              .trim()
+              .replace(/\s+/g, '-') 
+              .replace(/[^\w\-]/g, '');
+
+      const usedIds = new Set<string>();
+
+      // Assign IDs to headers
+      document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((header: Element) => {
+          let baseId = generateId(header.textContent || 'header');
+          let uniqueId = baseId;
+          let counter = 1;
+
+          // Ensure unique IDs
+          while (usedIds.has(uniqueId)) {
+              uniqueId = `${baseId}-${counter++}`;
+          }
+
+          usedIds.add(uniqueId);
+          header.id = uniqueId;
+      });
+
+      document.querySelectorAll('pre').forEach((pre: Element) => {
           const spanWrapper = document.createElement('div');
           spanWrapper.classList.add('code');
-          pre.parentNode.insertBefore(spanWrapper, pre);
+          pre.parentNode?.insertBefore(spanWrapper, pre);
           spanWrapper.appendChild(pre);
       });
 
-      document.querySelectorAll('pre code').forEach((block: any) => {
+      document.querySelectorAll('pre code').forEach((block: Element) => {
           const language = block.className.replace('language-', '').trim() || 'plaintext';
-          const highlighted = hljs.highlight(block.textContent, { language }).value;
+          const highlighted = hljs.highlight(block.textContent || '', { language }).value;
           block.innerHTML = `${highlighted}`;
           block.classList.add('hljs');
       });
@@ -32,6 +55,7 @@ async function md(filePath: string) {
       return '<p>Error processing markdown file.</p>';
   }
 }
+
 
 
 const app = new Xerus();
@@ -50,7 +74,7 @@ app.onNotFound(async (c: HTTPContext): Promise<Response> => {
 
 app.get("/", async (c: HTTPContext) => {
   let mdContent = await md('./README.md')
-  return c.html(root("Xerus", mdContent));
+  return c.html(root("Xerus - Simple web apps for Bun", mdContent));
 });
 
 app.get("/static/*", async (c: HTTPContext) => {
