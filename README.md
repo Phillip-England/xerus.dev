@@ -74,7 +74,7 @@ app.group('/api')
 Use a wildcard to serve static files from `./static`:
 
 ```ts
-app.get("/static/*", async (c: Context) => {
+app.get("/static/*", async (c: HTTPContext) => {
   return await c.file("." + c.path);
 });
 ```
