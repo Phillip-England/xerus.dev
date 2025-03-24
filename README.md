@@ -72,6 +72,23 @@ app.group('/api')
   .post('/user/post/:postNumber', handler)
 ```
 
+## File Based Routing
+I have another package, `squid`, which abstracts over `xerus` and extends it for file-based routing. Checkout the [README](https://github.com/phillip-england/squid) here if you are interested.
+
+Here is the quickstart for `squid`:
+```ts
+import { Squid } from "squid"
+
+let result = await Squid.new("./app", process.cwd())
+if (result.isErr()) {
+  console.error(result.unwrapErr())
+}
+
+let app = result.unwrap() as Squid
+
+await app.listen()
+```
+
 ## Static Files
 
 Use a wildcard to serve static files from `./static`:

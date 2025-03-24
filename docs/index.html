@@ -30,6 +30,16 @@ app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#39;/
 </code></pre></div><p>Group routing is also supported:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">group</span>(<span class=hljs-string>&#39;/api&#39;</span>)
   .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/:id&#39;</span>, handler)
   .<span class="hljs-title function_">post</span>(<span class=hljs-string>&#39;/user/post/:postNumber&#39;</span>, handler)
+</code></pre></div><h2 id=file-based-routing>File Based Routing</h2><p>I have another package, <code>squid</code>, which abstracts over <code>xerus</code> and extends it for file-based routing. Checkout the <a href=https://github.com/phillip-england/squid>README</a> here if you are interested.<p>Here is the quickstart for <code>squid</code>:<div class=code><pre><code class="language-ts hljs"><span class=hljs-keyword>import</span> { <span class="hljs-title class_">Squid</span> } <span class=hljs-keyword>from</span> <span class=hljs-string>&#34;squid&#34;</span>
+
+<span class=hljs-keyword>let</span> result = <span class=hljs-keyword>await</span> <span class="hljs-title class_">Squid</span>.<span class="hljs-title function_">new</span>(<span class=hljs-string>&#34;./app&#34;</span>, process.<span class="hljs-title function_">cwd</span>())
+<span class=hljs-keyword>if</span> (result.<span class="hljs-title function_">isErr</span>()) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(result.<span class="hljs-title function_">unwrapErr</span>())
+}
+
+<span class=hljs-keyword>let</span> app = result.<span class="hljs-title function_">unwrap</span>() <span class=hljs-keyword>as</span> <span class="hljs-title class_">Squid</span>
+
+<span class=hljs-keyword>await</span> app.<span class="hljs-title function_">listen</span>()
 </code></pre></div><h2 id=static-files>Static Files</h2><p>Use a wildcard to serve static files from <code>./static</code>:<div class=code><pre><code class="language-ts hljs">app.<span class="hljs-title function_">get</span>(<span class=hljs-string>&#34;/static/*&#34;</span>, <span class="hljs-title function_">async</span> (<span class=hljs-attr>c</span>: <span class="hljs-title class_">HTTPContext</span>) =&gt; {
   <span class=hljs-keyword>return</span> <span class=hljs-keyword>await</span> c.<span class="hljs-title function_">file</span>(<span class=hljs-string>&#34;.&#34;</span> + c.<span class=hljs-property>path</span>);
 });
