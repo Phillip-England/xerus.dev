@@ -1,6 +1,5 @@
 # Xerus
-
-Simple web apps for Bun.
+A Express-like HTTP Library for Bun
 
 <a href='https://github.com/phillip-england/xerus' style='width:64px; height:64px;'>
   <svg style='width:64px; height:64px;'  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -23,6 +22,10 @@ import { HTTPContext, logger, Xerus } from "xerus/xerus";
 let app = new Xerus()
 
 app.use(logger)
+
+app.get("/static/*", async (c: HTTPContext) => {
+  return await c.file("." + c.path);
+});
 
 app.get('/', async (c: HTTPContext) => {
   return c.html(`<h1>O'Doyle Rules!</h1>`)
